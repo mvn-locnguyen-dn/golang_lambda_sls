@@ -1,0 +1,71 @@
+service: golang-lambda-boilerplate
+
+frameworkVersion: "3"
+
+plugins:
+  - serverless-offline
+  - serverless-offline-ssm
+
+custom:
+  serverless-offline-ssm:
+    stages:
+      - local
+  serverless-offline:
+    stage: local
+    useDocker: true
+    useChildProcesses: true
+    noTimeout: true
+
+
+provider:
+  name: aws
+  runtime: ${ssm(us-east-1):/${self:provider.stage}/golang_lambda_boilerplate/GO_RUNTIME}
+  stage: ${opt:stage, 'dev1'}
+  region: us-east-1
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - secretsmanager:GetSecretValue
+            - lambda:InvokeFunction
+            - kms:GenerateDataKey
+            - kms:Decrypt
+            - kms:Encrypt
+          Resource:
+            - "*"
+  environment:
+    DB_DSN: ${ssm(us-east-1):/${self:provider.stage}/golang_lambda_boilerplate/DB_DSN}
+
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+    - ./bootstrap 
+
+functions:
+  users-list:
+    handler: ${file(./serverless.functions.yml):users-list.${self:provider.stage}.handler}
+    events:
+      - httpApi:
+          path: /users
+          method: get
+    package: ${file(./serverless.functions.yml):users-list.${self:provider.stage}.package}
+
+  users-detail:
+    handler: ${file(./serverless.functions.yml):users-detail.${self:provider.stage}.handler}
+    events:
+      - httpApi:
+          path: /users/{user_id}
+          method: get
+    package: ${file(./serverless.functions.yml):users-detail.${self:provider.stage}.package}
+
+  users-create:
+    handler: ${file(./serverless.functions.yml):users-create.${self:provider.stage}.handler}
+    events:
+      - httpApi:
+          path: /users
+          method: post
+    package: ${file(./serverless.functions.yml):users-create.${self:provider.stage}.package}

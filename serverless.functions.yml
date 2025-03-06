@@ -1,0 +1,50 @@
+users-list:
+  local:
+    handler: bootstrap
+    package: {}
+  dev:
+    handler: bootstrap
+    package:
+      artifact: bin/users_list.zip
+  staging:
+    handler: bootstrap
+    package:
+      artifact: bin/users_list.zip
+  production:
+    handler: bootstrap
+    package:
+      artifact: bin/users_list.zip
+
+users-detail:
+  local:
+    handler: bootstrap
+    package: {}
+  dev:
+    handler: bootstrap
+    package:
+      artifact: bin/users_detail.zip
+  staging:
+    handler: bootstrap
+    package:
+      artifact: bin/users_detail.zip
+  production:
+    handler: bootstrap
+    package:
+      artifact: bin/users_detail.zip
+
+users-create:
+  local:
+    handler: bootstrap
+    package: {}
+  dev:
+    handler: bootstrap
+    package:
+      artifact: bin/users_create.zip
+  staging:
+    handler: bootstrap
+    package:
+      artifact: bin/users_create.zip
+  production:
+    handler: bootstrap
+    package:
+      artifact: bin/users_create.zip

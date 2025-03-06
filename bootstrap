@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -e
+
+RAW_FUNC_NAME="${AWS_LAMBDA_FUNCTION_NAME}"
+
+FUNC_NAME=$(echo "$RAW_FUNC_NAME" | sed -E 's/^.*local-//')
+
+case "$FUNC_NAME" in
+  "users-list")
+    exec ./bin/users/list/bootstrap
+    ;;
+  "users-create")
+    exec ./bin/users/create/bootstrap
+    ;;
+  "users-detail")
+    exec ./bin/users/detail/bootstrap
+    ;;
+  "orders-list")
+    exec ./bin/orders/list/bootstrap
+    ;;
+  *)
+    echo "❌ Unknown function: $FUNC_NAME"
+    exit 1
+    ;;
+esac
